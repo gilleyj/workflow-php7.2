@@ -56,6 +56,8 @@ RUN php -v && \
 
 WORKDIR /app
 
+COPY ./code .
+
 # expose our service port
 EXPOSE 80
 
