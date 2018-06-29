@@ -5,7 +5,7 @@ ENV TIMEZONE=UTC \
 	APP_ENV=development
 
 RUN apk --update add dumb-init ca-certificates nginx supervisor bash \
-		tzdata unzip zip && \
+		tzdata unzip zip openssl && \
 	apk add --virtual .build_package git curl build-base autoconf dpkg-dev \
 		file libmagic re2c && \
 	apk add --virtual .deps_run bzip2 libjpeg-turbo libpng libmcrypt freetype \
@@ -32,7 +32,7 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 
 # install php modules
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-	docker-php-ext-install intl pdo pdo_mysql curl gd && \
+	docker-php-ext-install intl mysqli curl gd && \
 	pecl install -o -f xdebug mcrypt && \
 	docker-php-ext-enable xdebug mcrypt
 
