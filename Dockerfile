@@ -44,19 +44,20 @@ RUN apk del .build_package .build_deps && \
 	{ find /usr/local/lib -type f -print0 | xargs -0r strip --strip-all -p 2>/dev/null || true; } && \
 	rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
 
-
 # copy our config files over to the container
 COPY ./container_configs/php-fpm.conf /usr/local/etc/php-fpm.conf
 COPY ./container_configs/nginx.conf /etc/nginx/nginx.conf
-COPY ./container_configs/default.conf /etc/nginx/conf.d/default.conf
+COPY ./container_configs/default.conf.prod /etc/nginx/conf.d/default.conf.prod
+COPY ./container_configs/default.conf.dev /etc/nginx/conf.d/default.conf.dev
+COPY ./container_configs/cmd.sh /cmd.sh
+COPY ./container_configs/index.php /app/index.php
 
 # Report on PHP build
-RUN php -v && \
+RUN chmod a+x /cmd.sh && \
+	php -v && \
 	php -m
 
 WORKDIR /app
-
-COPY ./code .
 
 # expose our service port
 EXPOSE 80
@@ -65,4 +66,4 @@ EXPOSE 80
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # what we use to start the container
-CMD ["/bin/sh", "-c", "php-fpm --daemonize && nginx -g \"daemon off;\""]
+CMD ["/cmd.sh"]
