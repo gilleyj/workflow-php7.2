@@ -32,7 +32,7 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 
 # install php modules
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-	docker-php-ext-install intl mysqli curl gd && \
+	docker-php-ext-install intl mysqli curl gd exif && \
 	pecl install -o -f xdebug mcrypt && \
 	docker-php-ext-enable xdebug mcrypt
 
