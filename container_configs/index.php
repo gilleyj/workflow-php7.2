@@ -28,7 +28,7 @@
 		<div class="color3 black"></div>
 		<div class="color3 gray"></div>
 		<div class="color3 gray2"></div>
-	</div> 
+	</div>
 	<div id="color2">
 		<div class="color2 blue"></div>
 		<div class="color2 black"></div>
@@ -37,7 +37,7 @@
 		<div class="color2 teal"></div>
 		<div class="color2 black"></div>
 		<div class="color2 gray3"></div>
-	</div> 
+	</div>
 	<div id="color">
 		<div class="color gray3"></div>
 		<div class="color yellow"></div>
@@ -47,6 +47,6 @@
 		<div class="color red"></div>
 		<div class="color blue"></div>
 	</div>
-	<div class="author"><a href="http://www.bellsdesign.com">McGuire Made</a></div> 
+	<div class="author"><a href="http://www.bellsdesign.com">McGuire Made</a></div>
 </body>
 </html>

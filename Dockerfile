@@ -27,12 +27,12 @@ RUN cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 	rm -rf /etc/nginx/conf.d/default.conf && \
 	mkdir -p /app /run/nginx /run/php /var/lib/nginx/logs && \
 	chown -R nginx:www-data /run/nginx /var/lib/nginx/logs && \
-	chown -R www-data:www-data /run/php /app && \
+	chown -R www-data:www-data /var/tmp/nginx /run/php /app && \
 	chmod -R g+rws /app
 
 # install php modules
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-	docker-php-ext-install intl mysqli curl gd exif && \
+	docker-php-ext-install intl curl gd exif pdo_mysql bcmath zip&& \
 	pecl install -o -f xdebug mcrypt && \
 	docker-php-ext-enable xdebug mcrypt
 
