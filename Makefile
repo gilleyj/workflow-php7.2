@@ -4,7 +4,7 @@ DOCKERFILE = Dockerfile
 ORG = gilleyj
 NAME = workflow-php7.2
 IMAGE = $(ORG)/$(NAME)
-VERSION = 0.0.5
+VERSION = 0.0.6
 PORT_INT = 80
 PORT_EXT = 8020
 
