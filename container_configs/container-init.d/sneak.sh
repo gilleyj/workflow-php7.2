@@ -1,6 +1,6 @@
 #!/bin/sh
 VAULT_DESTINATION="${VAULT_DESTINATION:-/app/.env}"
-if [[ ! -z "${VAULT_URL}" && ! -z "${VAULT_KEY}"  && ! -z "${VAULT_SECRET}" ]]; then
+if [[ ! -z "${VAULT_URL}" && ! -z "${VAULT_SECRET}" ]]; then
 	openssl=$(which openssl)
 	if [[ -z "${openssl}" || ! -x ${openssl} ]] ; then
 		echo "ERROR: openssl not found/not executable..."
@@ -17,11 +17,29 @@ if [[ ! -z "${VAULT_URL}" && ! -z "${VAULT_KEY}"  && ! -z "${VAULT_SECRET}" ]]; 
 		exit 1
 	fi
 	TEMP_FILE=$(${mktemp})
+	if [[ ! -z "${VAULT_KEY}" ]] ; then
+		URL="http://${VAULT_URL}/?=${VAULT_KEY}"
+	else
+		URL="http://${VAULT_URL}"
+	fi
 	echo "... ... sneak..."
-	{
-		${wget} -O ${TEMP_FILE} http://${VAULT_URL}/?=${VAULT_KEY}
-		${openssl} aes-256-cbc -a -d -salt -in "${TEMP_FILE}" -out "${VAULT_DESTINATION}" -pass "pass:${VAULT_SECRET}"
-	} 2>&1 > /dev/null
+	if [[ ! -z "${VAULT_BUGLY}" ]] ; then
+		echo "... ... ... ${wget} -O ${TEMP_FILE} ${URL}"
+		echo "... ... ... ${openssl} aes-256-cbc -a -d -salt -in \"${TEMP_FILE}\" -out \"${VAULT_DESTINATION}\" -pass \"pass:${VAULT_SECRET}\""
+	fi
+
+	${wget} -O ${TEMP_FILE} ${URL} &> /dev/null
+	result=$?
+	if [[ "$result" -eq "0" ]]; then
+		${openssl} aes-256-cbc -a -d -salt -in "${TEMP_FILE}" -out "${VAULT_DESTINATION}" -pass "pass:${VAULT_SECRET}" &> /dev/null
+		result=$?
+		if [[ "$result" -eq "0" ]]; then
+			echo "... ... found secret"
+		fi
+	else
+		echo "... ... no secret"
+	fi
+
 	rm ${TEMP_FILE}
 else
 	echo "... ... missing sneak info, sneak skipped..."
