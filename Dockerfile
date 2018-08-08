@@ -2,7 +2,7 @@ FROM php:7.2-fpm-alpine3.7
 
 ENV TIMEZONE=UTC \
 	ENV=/etc/profile \
-	APP_ENV=development
+	APP_ENV=dev
 
 RUN apk --update add dumb-init ca-certificates nginx supervisor bash \
 		tzdata unzip zip openssl && \
@@ -45,15 +45,11 @@ RUN apk del .build_package .build_deps && \
 	rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
 
 # copy our config files over to the container
-COPY ./container_configs/php-fpm.conf /usr/local/etc/php-fpm.conf
-COPY ./container_configs/nginx.conf /etc/nginx/nginx.conf
-COPY ./container_configs/default.conf.prod /etc/nginx/conf.d/default.conf.prod
-COPY ./container_configs/default.conf.dev /etc/nginx/conf.d/default.conf.dev
-COPY ./container_configs/cmd.sh /cmd.sh
-COPY ./container_configs/index.php /app/index.php
+COPY ./container_configs /
 
 # Report on PHP build
-RUN chmod a+x /cmd.sh && \
+RUN chmod a+x /cmd.sh /container-init.d/*.sh && \
+	chown -R www-data:www-data /app && \
 	php -v && \
 	php -m
 
