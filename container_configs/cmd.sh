@@ -26,7 +26,8 @@ else
 	cp /etc/nginx/conf.d/default.conf.prod /etc/nginx/conf.d/default.conf
 fi
 
-echo "starting php-fpm and nginx..."
+echo "starting supervisord, php-fpm and nginx..."
+/usr/bin/supervisord -n &
 /usr/local/sbin/php-fpm --daemonize &
 /usr/sbin/nginx -g "daemon off;"
 
